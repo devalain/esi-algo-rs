@@ -2,18 +2,21 @@
 pub struct CaractèreInattendu(char);
 pub fn valeur_lettre(c: char) -> Result<usize, CaractèreInattendu> {
     match c {
-        'A'|'E'|'I'|'L'|'N'|'O'|'R'|'S'|'T'|'U' => Ok(1),
-        'D'|'G'|'M' => Ok(2),
-        'B'|'C'|'P' => Ok(3),
-        'F'|'H'|'V' => Ok(4),
-        'J'|'Q' => Ok(8),
-        'K'|'W'|'X'|'Y'|'Z'=> Ok(10),
-        other => Err(CaractèreInattendu(other))
+        'A' | 'E' | 'I' | 'L' | 'N' | 'O' | 'R' | 'S' | 'T' | 'U' => Ok(1),
+        'D' | 'G' | 'M' => Ok(2),
+        'B' | 'C' | 'P' => Ok(3),
+        'F' | 'H' | 'V' => Ok(4),
+        'J' | 'Q' => Ok(8),
+        'K' | 'W' | 'X' | 'Y' | 'Z' => Ok(10),
+        other => Err(CaractèreInattendu(other)),
     }
 }
 
 pub fn score_mot(mot: &str) -> Result<usize, CaractèreInattendu> {
-    let valeurs = mot.chars().map(valeur_lettre).collect::<Result<Vec<usize>, _>>()?;
+    let valeurs = mot
+        .chars()
+        .map(valeur_lettre)
+        .collect::<Result<Vec<usize>, _>>()?;
     Ok(valeurs.iter().sum())
 }
 
@@ -30,7 +33,10 @@ pub fn mot_possible(chevalet: &[char], mot: &str) -> bool {
     true
 }
 
-pub fn meilleur_mot<'a>(chevalet: &[char], dico: &[&'a str]) -> Result<Option<(&'a str, usize)>, CaractèreInattendu> {
+pub fn meilleur_mot<'a>(
+    chevalet: &[char],
+    dico: &[&'a str],
+) -> Result<Option<(&'a str, usize)>, CaractèreInattendu> {
     let scores = dico
         .iter()
         .filter(|mot| mot_possible(chevalet, mot))
@@ -46,7 +52,7 @@ mod tests {
     #[test]
     fn meilleur_mot_works() {
         const DICO: &[&str] = &["JAVA", "RUST", "C", "CPP"];
-        
+
         let chevalet = &['J', 'R', 'S', 'U', 'T', 'A', 'A', 'V'];
         assert_eq!(meilleur_mot(chevalet, DICO), Ok(Some(("JAVA", 14))));
     }
@@ -66,13 +72,13 @@ mod tests {
     #[test]
     fn mot_possible_works() {
         let chevalet = &['A', 'O', 'V', 'G', 'G', 'J', 'L'];
-        
+
         let mot = "ALGO";
         assert!(mot_possible(chevalet, mot));
-        
+
         let mot = "JAVA";
         assert!(!mot_possible(chevalet, mot));
-        
+
         let mot = "JOGGER";
         assert!(!mot_possible(chevalet, mot));
     }
