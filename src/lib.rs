@@ -1,1 +1,1 @@
-pub mod a9recap;
+pub mod a9recap_scrabble;
